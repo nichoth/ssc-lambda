@@ -17,7 +17,7 @@ test('get author', t => {
     t.end()
 })
 
-test('is valid message', t => {
+test('isValidMessage', t => {
 
     const testMsg = {
         "previous": null,
@@ -32,7 +32,6 @@ test('is valid message', t => {
         "signature": "HaMjv/gvbDGHnAwa94AB7SBIzriIPua/MYwsZtYHgMYSOtRl5WaEZ+KwQmQVeddHC+8Sw27hPP25UiOb1wKbdw=="
     }
 
-    //   const pubKey = await didToPublicKey(msg.author).publicKey
     const { publicKey } = didToPublicKey(testMsg.author)
 
     isValidMsg(testMsg, null, publicKey).then(isVal => {
@@ -40,4 +39,29 @@ test('is valid message', t => {
         t.end()
     })
 
+})
+
+test('isValidMsg', t => {
+    const testMsg = {
+        "previous": null,
+        "sequence": 1,
+        "author": "did:key:z82T5XnCdYQswR8oEJ6eEHUHvEVVk34jaBRwZFMZ6yEHkAPrVKpk43t6rUcZpZqzvox24hG4djgYRNq5JHigoWoxhEvEJ",
+        "timestamp": 1651976991718,
+        "hash": "sha256",
+        "content": {
+          "type": "post",
+          "text": "wooo"
+        },
+        "signature": "fooooo"
+    }
+
+    const { publicKey } = didToPublicKey(testMsg.author)
+
+    isValidMsg(testMsg, null, publicKey).then(isVal => {
+        t.equal(isVal, false, 'should say an invalid message is invalid')
+        t.end()
+    }).catch(err => {
+        t.ok(err, 'should throw an error with invalid signature')
+        t.end()
+    })
 })
