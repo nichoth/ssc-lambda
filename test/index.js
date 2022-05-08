@@ -17,8 +17,7 @@ test('get author', t => {
     t.end()
 })
 
-test('isValidMessage', t => {
-
+test('isValidMessage with a valid message', t => {
     const testMsg = {
         "previous": null,
         "sequence": 1,
@@ -41,7 +40,7 @@ test('isValidMessage', t => {
 
 })
 
-test('isValidMsg', t => {
+test('isValidMsg with an invalid message', t => {
     const testMsg = {
         "previous": null,
         "sequence": 1,
