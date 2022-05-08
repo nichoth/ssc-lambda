@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
+    "postversion": "git push && git push --tags && npm publish",
     "test": "tape test/*.js | tap-arc"
   },
   "repository": {
