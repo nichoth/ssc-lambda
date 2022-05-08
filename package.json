@@ -20,6 +20,9 @@
   },
   "homepage": "https://github.com/nichoth/ssc-lambda#readme",
   "dependencies": {
+    "chloride": "^2.4.1",
+    "json-stable-stringify": "^1.0.1",
+    "one-webcrypto": "^1.0.3",
     "uint8arrays": "^3.0.0"
   },
   "devDependencies": {

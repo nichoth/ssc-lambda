@@ -10,6 +10,3 @@ npm i -S @nichoth/ssc-lambda
 Until the above error is resolved, this is a solution. In the lambda
 functions I only need the `didToPublicKey`, `getAuthor`, and `isValidMsg`
 functions so far. 
-
-
-

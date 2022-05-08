@@ -1,5 +1,5 @@
 const testDid = 'did:key:z82T5XeMUNk67GZtcQ2pYnc34ZyUnMrE1YC1bHQAveSZn7oHAz2xyouSRLYo5FYsi2LD9wGmMBQcobhT3JbKPDfhVF5D4'
-const { didToPublicKey, getAuthor } = require('../')
+const { didToPublicKey, getAuthor, isValidMsg } = require('../')
 const test = require('tape')
 
 test('did to public key', t => {
@@ -15,4 +15,29 @@ test('get author', t => {
     const author = getAuthor(testMsg)
     t.equal(author, 'me', 'should return `author` value in message')
     t.end()
+})
+
+test('is valid message', t => {
+
+    const testMsg = {
+        "previous": null,
+        "sequence": 1,
+        "author": "did:key:z82T5XnCdYQswR8oEJ6eEHUHvEVVk34jaBRwZFMZ6yEHkAPrVKpk43t6rUcZpZqzvox24hG4djgYRNq5JHigoWoxhEvEJ",
+        "timestamp": 1651976991718,
+        "hash": "sha256",
+        "content": {
+          "type": "post",
+          "text": "wooo"
+        },
+        "signature": "HaMjv/gvbDGHnAwa94AB7SBIzriIPua/MYwsZtYHgMYSOtRl5WaEZ+KwQmQVeddHC+8Sw27hPP25UiOb1wKbdw=="
+    }
+
+    //   const pubKey = await didToPublicKey(msg.author).publicKey
+    const { publicKey } = didToPublicKey(testMsg.author)
+
+    isValidMsg(testMsg, null, publicKey).then(isVal => {
+        t.ok(isVal, 'should validate a message')
+        t.end()
+    })
+
 })
