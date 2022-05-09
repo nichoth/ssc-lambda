@@ -23,7 +23,8 @@ const DEFAULT_ECC_CURVE = 'P-256'
 module.exports = {
     didToPublicKey,
     getAuthor,
-    isValidMsg
+    isValidMsg,
+    getId
 }
 
 
