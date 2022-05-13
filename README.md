@@ -18,3 +18,17 @@ functions so far.
 --------------------------------------------------
 
 https://nodejs.org/api/packages.html#conditional-exports
+
+### API
+
+```js
+module.exports = {
+    didToPublicKey,
+    publicKeyToDid,
+    getAuthor,
+    isValidMsg,
+    createKeys,
+    exportKeys,
+    getId
+}
+```
