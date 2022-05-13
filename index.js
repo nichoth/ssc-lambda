@@ -3,6 +3,7 @@ const { fromString } = require('uint8arrays/from-string')
 const { webcrypto } = require('one-webcrypto')
 const stringify = require('json-stable-stringify')
 const sodium = require("chloride")
+var timestamp = require('monotonic-timestamp')
 // import { webcrypto } from 'one-webcrypto'
 
 const KeyType = {
@@ -25,11 +26,153 @@ module.exports = {
     publicKeyToDid,
     getAuthor,
     isValidMsg,
-    // createMsg,
+    createMsg,
     createKeys,
     exportKeys,
     getId
 }
+
+function isObject (o) {
+    return o && 'object' === typeof o
+}
+
+function isEncrypted (msg) {
+    return (typeof msg.value.content == 'string')
+}
+
+async function createMsg (keys, prevMsg, content) {
+    if (!isObject(content) && !isEncrypted(content)) {
+        throw new Error('invalid message content, ' +
+            'must be object or encrypted string')
+    }
+
+    return exportKeys(keys).then(exported => {
+        const did = publicKeyToDid(exported.public)
+
+        var msg = {
+            previous: prevMsg ? getId(prevMsg) : null,
+            sequence: prevMsg ? prevMsg.sequence + 1 : 1,
+            author: did,
+            timestamp: +timestamp(),
+            hash: 'sha256',
+            content: content
+        }
+
+        var err = isInvalidShape(msg)
+        if (err) throw err
+
+        return signObj(keys, null, msg)
+    })
+}
+
+function isInteger (n) {
+    return ~~n === n
+}
+
+function isString (s) {
+    return s && 'string' === typeof s
+}
+
+function isFeedId (data) {
+    return isString(data) // && feedIdRegex.test(data)
+}
+
+function isValidOrder (msg, signed) {
+    var keys = Object.keys(msg)
+
+    if (signed && keys.length !== 7) return false
+
+    if (
+        keys[0] !== 'previous' ||
+        keys[3] !== 'timestamp' ||
+        keys[4] !== 'hash' ||
+        keys[5] !== 'content' ||
+        (signed && keys[6] !== 'signature')
+    ) {
+        return false
+    }
+
+    // author and sequence may be swapped.
+    if (!(
+        (keys[1] === 'sequence' && keys[2] === 'author') ||
+        (keys[1] === 'author' && keys[2] === 'sequence')
+    )) {
+        return false
+    }
+
+    return true
+}
+
+function isSupportedHash (msg) {
+    return msg.hash === 'sha256'
+}
+
+function isInvalidShape (msg) {
+    if (
+        !isObject(msg) ||
+        !isInteger(msg.sequence) ||
+        !isFeedId(msg.author) ||
+        !(isObject(msg.content) ||
+        isEncrypted(msg.content)) ||
+        !isValidOrder(msg, false) || //false, because message may not be signed yet.
+        !isSupportedHash(msg)
+    ) {
+        return new Error('message has invalid properties:' +
+            JSON.stringify(msg, null, 2))
+    }
+}
+
+async function signObj (keys, hmac_key, obj) {
+    if (!obj) {
+        obj = hmac_key
+        hmac_key = null
+    }
+    var _obj = clone(obj)
+    const msgStr = stringify(_obj, null, 2)
+    _obj.signature = await sign(keys, msgStr)
+    return _obj
+}
+
+async function sign (keys, msg) {
+    const sig = await webcrypto.subtle.sign(
+        {
+            name: ECC_WRITE_ALG,
+            hash: { name: DEFAULT_HASH_ALG }
+        },
+        keys.privateKey,
+        normalizeUnicodeToBuf(msg, DEFAULT_CHAR_SIZE)
+    )
+
+    return arrBufToBase64(sig)
+}
+
+// const normalizeUnicodeToBuf = (msg, charSize) => {
+//     switch (charSize) {
+//       case 8: return normalizeUtf8ToBuf(msg)
+//       default: return normalizeUtf16ToBuf(msg)
+//     }
+// }
+
+// export const normalizeUtf8ToBuf = (msg) => {
+//     return normalizeToBuf(msg, (str) => strToArrBuf(str, CharSize.B8))
+// }
+  
+// export const normalizeUtf16ToBuf = (msg) => {
+//     return normalizeToBuf(msg, (str) => strToArrBuf(str, CharSize.B16))
+// }
+
+// const normalizeToBuf = (msg, strConv) => {
+//     if (typeof msg === 'string') {
+//         return strConv(msg)
+//     } else if (typeof msg === 'object' && msg.byteLength !== undefined) {
+//         // this is the best runtime check I could find for ArrayBuffer/Uint8Array
+//         const temp = new Uint8Array(msg)
+//         return temp.buffer
+//     } else {
+//         throw new Error("Improper value. Must be a string, ArrayBuffer, Uint8Array")
+//     }
+// }
+
 
 
 function createKeys () {

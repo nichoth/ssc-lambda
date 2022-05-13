@@ -13,7 +13,7 @@ functions so far.
 
 ------------------------------------------
 
-`createKeys`, `exportKeys`, `publicKeyToDid`, on node side
+`createKeys`, `exportKeys`, `publicKeyToDid`, `createMsg` on node side
 
 --------------------------------------------------
 

@@ -1,6 +1,6 @@
 const testDid = 'did:key:z82T5XeMUNk67GZtcQ2pYnc34ZyUnMrE1YC1bHQAveSZn7oHAz2xyouSRLYo5FYsi2LD9wGmMBQcobhT3JbKPDfhVF5D4'
 const { didToPublicKey, getAuthor, isValidMsg, createKeys,
-    exportKeys, publicKeyToDid } = require('../')
+    exportKeys, publicKeyToDid, createMsg } = require('../')
 const test = require('tape')
 
 var alice
@@ -20,6 +20,20 @@ test('export keys', t => {
             exported = keys
             t.ok(keys.public, 'exports public key')
             t.ok(keys.private, 'exports private key')
+            t.end()
+        })
+})
+
+// async function createMsg (keys, prevMsg, content) {
+test('createMsg', t => {
+    createMsg(alice.keys, null, { type: 'post', text: 'ok' })
+        .then(msg => {
+            console.log('msg', msg)
+            t.equal(msg.content.text, 'ok', 'shoudl create the right message')
+            t.end()
+        })
+        .catch(err => {
+            t.fail(err)
             t.end()
         })
 })

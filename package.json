@@ -23,6 +23,7 @@
   "dependencies": {
     "chloride": "^2.4.1",
     "json-stable-stringify": "^1.0.1",
+    "monotonic-timestamp": "^0.0.9",
     "one-webcrypto": "^1.0.3",
     "uint8arrays": "^3.0.0"
   },
