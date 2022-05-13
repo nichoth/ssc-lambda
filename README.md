@@ -11,6 +11,10 @@ Until the above error is resolved, this is a solution. In the lambda
 functions I only need the `didToPublicKey`, `getAuthor`, and `isValidMsg`
 functions so far. 
 
+------------------------------------------
+
+`createKeys`, `exportKeys`, `publicKeyToDid`, on node side
+
 --------------------------------------------------
 
 https://nodejs.org/api/packages.html#conditional-exports

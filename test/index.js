@@ -1,6 +1,26 @@
 const testDid = 'did:key:z82T5XeMUNk67GZtcQ2pYnc34ZyUnMrE1YC1bHQAveSZn7oHAz2xyouSRLYo5FYsi2LD9wGmMBQcobhT3JbKPDfhVF5D4'
-const { didToPublicKey, getAuthor, isValidMsg } = require('../')
+const { didToPublicKey, getAuthor, isValidMsg, createKeys,
+    exportKeys } = require('../')
 const test = require('tape')
+
+var alice
+test('createKeys', t => {
+    createKeys().then(_alice => {
+        alice = _alice
+        t.ok(alice.did, 'creates did')
+        t.ok(alice.keys, 'creates keys')
+        t.end()
+    })
+})
+
+test('export keys', t => {
+    exportKeys(alice.keys)
+        .then(keys => {
+            t.ok(keys.public, 'exports public key')
+            t.ok(keys.private, 'exports private key')
+            t.end()
+        })
+})
 
 test('did to public key', t => {
     const { publicKey, type } = didToPublicKey(testDid)

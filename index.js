@@ -24,8 +24,133 @@ module.exports = {
     didToPublicKey,
     getAuthor,
     isValidMsg,
+    // createMsg,
+    createKeys,
+    exportKeys,
     getId
 }
+
+
+function createKeys () {
+    const uses = ['sign', 'verify']
+
+    return webcrypto.subtle.generateKey({
+        name:  ECC_WRITE_ALG,
+        namedCurve: 'P-256'
+    }, true, uses)
+        .then(keys => {
+            return publicKeyToId(keys.publicKey)
+                .then(id => {
+                    return exportKeys(keys).then(exported => {
+                        return {
+                            did: publicKeyToDid(exported.public),
+                            id,
+                            keys
+                        }
+                    })
+                })
+        })
+}
+
+
+function publicKeyToDid (publicKey, type) {
+    type = type || 'ed25519'
+
+    // convert base64 string to buffer if necessary
+    var pubKeyBuf
+    if (typeof publicKey === 'string') {
+        pubKeyBuf = base64ToArrBuf(publicKey)
+    } else {
+        pubKeyBuf = publicKey
+    }
+  
+    // Prefix public-write key
+    const prefix = magicBytes(type)
+    if (prefix === null) {
+        throw new Error(`Key type '${type}' not supported`)
+    }
+  
+    const prefixedBuf = joinBufs(prefix, pubKeyBuf)
+  
+    // Encode prefixed
+    return BASE58_DID_PREFIX +
+        toString(new Uint8Array(prefixedBuf), "base58btc")
+}
+
+function joinBufs (fst, snd) {
+    const view1 = new Uint8Array(fst)
+    const view2 = new Uint8Array(snd)
+    const joined = new Uint8Array(view1.length + view2.length)
+    joined.set(view1)
+    joined.set(view2, view1.length)
+    return joined.buffer
+}
+
+
+function magicBytes (keyType) {
+    switch (keyType) {
+        case KeyType.Edwards: return EDWARDS_DID_PREFIX
+        case KeyType.RSA: return RSA_DID_PREFIX
+        case KeyType.BLS: return BLS_DID_PREFIX
+        default: return null
+    }
+}
+
+function exportKeys (keypair) {
+    return Promise.all([
+        webcrypto.subtle.exportKey('raw', keypair.publicKey),
+        webcrypto.subtle.exportKey('pkcs8', keypair.privateKey)
+        // webcrypto.subtle.exportKey('raw', keypair.privateKey)
+    ])
+        .then(([pub, priv]) => {
+            return {
+                public: arrBufToBase64(pub),
+                private: arrBufToBase64(priv)
+            }
+        })
+}
+
+function arrBufToBase64(buf) {
+    return uint8arrays.toString(new Uint8Array(buf), "base64pad")
+}
+
+
+async function publicKeyToId (publicKey) {
+    if (typeof publicKey === 'string') {
+        return '@' + publicKey + '.' + KEY_TYPE
+    }
+
+    const raw = await webcrypto.subtle.exportKey('raw', publicKey)
+    const str = arrBufToBase64(raw)
+    return '@' + str + '.' +  'ed25519'
+}
+
+
+// function exportKeys (keypair) {
+//     return webcrypto.subtle.exportKey('raw', keypair.publicKey)
+//         .then(pub => {
+//             return { public: toString(new Uint8Array(pub), 'base64pad') }
+//         })
+// }
+
+
+
+// function isEncrypted (msg) {
+//     return (typeof msg.value.content == 'string')
+// }
+
+// async function createMsg (keys, prevMsg, content) {
+//     if (!isObject(content) && !isEncrypted(content)) {
+//         throw new Error('invalid message content, ' +
+//             'must be object or encrypted string')
+//     }
+
+//     return exportKeys(keys).then(exported => {
+//     })
+// }
+
+
+
 
 
 // this checks the signature and also the merkle integrity of the message with
