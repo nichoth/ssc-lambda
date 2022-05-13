@@ -1,7 +1,7 @@
 {
   "name": "@nichoth/ssc-lambda",
   "description": "ssc-related functions that are factored in such a way that they work in lambda functions",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "scripts": {
     "postversion": "git push && git push --tags && npm publish",
