@@ -4,7 +4,6 @@ const { webcrypto } = require('one-webcrypto')
 const stringify = require('json-stable-stringify')
 const sodium = require("chloride")
 var timestamp = require('monotonic-timestamp')
-// import { webcrypto } from 'one-webcrypto'
 
 const KeyType = {
     RSA: "rsa",
@@ -146,35 +145,6 @@ async function sign (keys, msg) {
     return arrBufToBase64(sig)
 }
 
-// const normalizeUnicodeToBuf = (msg, charSize) => {
-//     switch (charSize) {
-//       case 8: return normalizeUtf8ToBuf(msg)
-//       default: return normalizeUtf16ToBuf(msg)
-//     }
-// }
-
-// export const normalizeUtf8ToBuf = (msg) => {
-//     return normalizeToBuf(msg, (str) => strToArrBuf(str, CharSize.B8))
-// }
-  
-// export const normalizeUtf16ToBuf = (msg) => {
-//     return normalizeToBuf(msg, (str) => strToArrBuf(str, CharSize.B16))
-// }
-
-// const normalizeToBuf = (msg, strConv) => {
-//     if (typeof msg === 'string') {
-//         return strConv(msg)
-//     } else if (typeof msg === 'object' && msg.byteLength !== undefined) {
-//         // this is the best runtime check I could find for ArrayBuffer/Uint8Array
-//         const temp = new Uint8Array(msg)
-//         return temp.buffer
-//     } else {
-//         throw new Error("Improper value. Must be a string, ArrayBuffer, Uint8Array")
-//     }
-// }
-
-
-
 function createKeys () {
     const uses = ['sign', 'verify']
 
@@ -268,34 +238,6 @@ async function publicKeyToId (publicKey) {
     const str = arrBufToBase64(raw)
     return '@' + str + '.' +  'ed25519'
 }
-
-
-// function exportKeys (keypair) {
-//     return webcrypto.subtle.exportKey('raw', keypair.publicKey)
-//         .then(pub => {
-//             return { public: toString(new Uint8Array(pub), 'base64pad') }
-//         })
-// }
-
-
-
-// function isEncrypted (msg) {
-//     return (typeof msg.value.content == 'string')
-// }
-
-// async function createMsg (keys, prevMsg, content) {
-//     if (!isObject(content) && !isEncrypted(content)) {
-//         throw new Error('invalid message content, ' +
-//             'must be object or encrypted string')
-//     }
-
-//     return exportKeys(keys).then(exported => {
-//     })
-// }
-
-
-
-
 
 // this checks the signature and also the merkle integrity of the message with
 // the given previous message
