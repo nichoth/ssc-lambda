@@ -217,10 +217,13 @@ function exportKeys (keypair) {
         // webcrypto.subtle.exportKey('raw', keypair.privateKey)
     ])
         .then(([pub, priv]) => {
-            return {
+            const pair = {
                 public: arrBufToBase64(pub),
                 private: arrBufToBase64(priv)
             }
+
+            console.log('pair', pair)
+            return pair
         })
 }
 
@@ -241,6 +244,7 @@ async function publicKeyToId (publicKey) {
 
 // this checks the signature and also the merkle integrity of the message with
 // the given previous message
+
 function isValidMsg (msg, prevMsg, publicKey) {
     if (typeof publicKey === 'string') {
         return webcrypto.subtle.importKey(

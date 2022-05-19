@@ -29,8 +29,14 @@ test('createMsg', t => {
     createMsg(alice.keys, null, { type: 'post', text: 'ok' })
         .then(msg => {
             console.log('msg', msg)
-            t.equal(msg.content.text, 'ok', 'shoudl create the right message')
-            t.end()
+            t.equal(msg.content.text, 'ok', 'should create the right message')
+
+            const { publicKey } = didToPublicKey(msg.author)
+
+            isValidMsg(msg, null, publicKey).then(isVal => {
+                t.equal(isVal, true, 'should say it is a valid message')
+                t.end()
+            })
         })
         .catch(err => {
             t.fail(err)
