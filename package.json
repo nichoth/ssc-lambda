@@ -28,6 +28,7 @@
     "uint8arrays": "^3.0.0"
   },
   "devDependencies": {
+    "@nichoth/ssc": "^0.10.0",
     "tap-arc": "^0.3.4",
     "tape": "^5.5.3"
   }
