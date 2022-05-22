@@ -222,7 +222,6 @@ function exportKeys (keypair) {
                 private: arrBufToBase64(priv)
             }
 
-            console.log('pair', pair)
             return pair
         })
 }

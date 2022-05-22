@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "postversion": "git push && git push --tags && npm publish",
-    "test": "tape test/*.js | tap-arc"
+    "test": "tape test/*.js | tap-arc",
+    "test-web": "browserify -p esmify test/web.js | tape-run | tap-arc"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,10 @@
   },
   "devDependencies": {
     "@nichoth/ssc": "^0.10.0",
+    "browserify": "^17.0.0",
+    "esmify": "^2.1.1",
     "tap-arc": "^0.3.4",
-    "tape": "^5.5.3"
+    "tape": "^5.5.3",
+    "tape-run": "^10.0.0"
   }
 }
