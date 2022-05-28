@@ -28,7 +28,32 @@ module.exports = {
     createMsg,
     createKeys,
     exportKeys,
-    getId
+    getId,
+    importKeys
+}
+
+function importKeys (keys) {
+    return Promise.all([
+        webcrypto.subtle.importKey(
+            'raw',
+            base64ToArrBuf(keys.public),
+            { name: ECC_WRITE_ALG, namedCurve: DEFAULT_ECC_CURVE },
+            true,
+            ['verify']
+        ),
+
+        webcrypto.subtle.importKey(
+            'pkcs8',
+            base64ToArrBuf(keys.private),
+            // buf,
+            { name: ECC_WRITE_ALG, namedCurve: DEFAULT_ECC_CURVE },
+            true,
+            ['sign']
+        )
+    ])
+        .then(([pub, priv]) => {
+            return { publicKey: pub, privateKey: priv }
+        })
 }
 
 function isObject (o) {

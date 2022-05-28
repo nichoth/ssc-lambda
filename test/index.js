@@ -1,7 +1,7 @@
 const test = require('tape')
 const testDid = 'did:key:z82T5XeMUNk67GZtcQ2pYnc34ZyUnMrE1YC1bHQAveSZn7oHAz2xyouSRLYo5FYsi2LD9wGmMBQcobhT3JbKPDfhVF5D4'
 const { didToPublicKey, getAuthor, isValidMsg, createKeys,
-    exportKeys, publicKeyToDid, createMsg } = require('../')
+    exportKeys, publicKeyToDid, createMsg, importKeys } = require('../')
 
 var alice
 test('createKeys', t => {
@@ -20,6 +20,19 @@ test('export keys', t => {
             exported = keys
             t.ok(keys.public, 'exports public key')
             t.ok(keys.private, 'exports private key')
+            t.end()
+        })
+})
+
+test('import keys', t => {
+    importKeys(exported)
+        .then(keys => {
+            t.ok(keys.publicKey, 'should have public key')
+            t.ok(keys.privateKey, 'should have private key')
+            t.end()
+        })
+        .catch(err => {
+            t.error(err, 'should not get error')
             t.end()
         })
 })
