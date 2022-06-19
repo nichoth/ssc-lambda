@@ -60,8 +60,8 @@ function isObject (o) {
     return o && 'object' === typeof o
 }
 
-function isEncrypted (content) {
-    return (typeof content == 'string')
+function isEncrypted (msg) {
+    return (typeof msg.value.content == 'string')
 }
 
 async function createMsg (keys, prevMsg, content) {
