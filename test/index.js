@@ -1,7 +1,8 @@
 const test = require('tape')
 const testDid = 'did:key:z82T5XeMUNk67GZtcQ2pYnc34ZyUnMrE1YC1bHQAveSZn7oHAz2xyouSRLYo5FYsi2LD9wGmMBQcobhT3JbKPDfhVF5D4'
 const { didToPublicKey, getAuthor, isValidMsg, createKeys,
-    exportKeys, publicKeyToDid, createMsg, importKeys } = require('../')
+    exportKeys, publicKeyToDid, createMsg, importKeys,
+    getDidFromKeys } = require('../')
 
 var alice
 test('createKeys', t => {
@@ -123,6 +124,13 @@ test('isValidMsg with an invalid message', t => {
         t.end()
     }).catch(err => {
         t.ok(err, 'should throw an error with invalid signature')
+        t.end()
+    })
+})
+
+test('getDidFromKeys', t => {
+    getDidFromKeys(alice.keys).then(did => {
+        t.equal(alice.did, did, 'should return the right DID')
         t.end()
     })
 })

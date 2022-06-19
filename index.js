@@ -29,7 +29,15 @@ module.exports = {
     createKeys,
     exportKeys,
     getId,
-    importKeys
+    importKeys,
+    getDidFromKeys
+}
+
+// keys is an object with { public: CryptoKey }
+function getDidFromKeys (keys) {
+    return exportKeys(keys).then((ks) => {
+        return publicKeyToDid(ks.public)
+    })
 }
 
 function importKeys (keys) {
