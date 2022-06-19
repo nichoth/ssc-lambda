@@ -18,6 +18,7 @@ test('export keys', t => {
     exportKeys(alice.keys)
         .then(keys => {
             exported = keys
+            console.log('exported', exported)
             t.ok(keys.public, 'exports public key')
             t.ok(keys.private, 'exports private key')
             t.end()
