@@ -160,8 +160,7 @@ async function signObj (keys, hmac_key, obj) {
         hmac_key = null
     }
     var _obj = clone(obj)
-    const msgStr = stringify(_obj)
-    _obj.signature = await sign(keys, msgStr)
+    _obj.signature = await sign( keys, stringify(_obj) )
     return _obj
 }
 
