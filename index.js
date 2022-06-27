@@ -159,7 +159,7 @@ async function signObj (keys, hmac_key, obj) {
         obj = hmac_key
         hmac_key = null
     }
-    var _obj = clone(obj)
+    const _obj = clone(obj)
     _obj.signature = await sign( keys, stringify(_obj) )
     return _obj
 }
@@ -497,7 +497,7 @@ function hasPrefix (prefixedKey, prefix) {
 // -------------------------------------
 
 function clone (obj) {
-    var _obj = {}
+    const _obj = {}
     for (var k in obj) {
         if (Object.hasOwnProperty.call(obj, k)) _obj[k] = obj[k]
     }
