@@ -316,7 +316,6 @@ function verify (publicKey, sig, msg) {
     // if we're given a string, we need to convert that
     // into a publicKey instance
     if (typeof publicKey === 'string') {
-        // console.log('****is string*****', publicKey)
         return webcrypto.subtle.importKey(
             'raw',
             base64ToArrBuf(publicKey),
@@ -325,7 +324,6 @@ function verify (publicKey, sig, msg) {
             ['verify']
         )
             .then(pubKey => {
-                console.log(typeof msg)
                 return webcrypto.subtle.verify(
                     {
                         name: ECC_WRITE_ALG,
@@ -337,7 +335,6 @@ function verify (publicKey, sig, msg) {
                 )
             })
             .then(isOk => {
-                console.log('is ok?????', isOk)
                 return isOk
             })
     }
@@ -466,7 +463,6 @@ function didToPublicKey (did) {
  * to determine cryptosystem & the unprefixed key-buffer.
  */
  function parseMagicBytes (prefixedKey) {
-    // console.log('**magical buf**', prefixedKey)
     // RSA
     if (hasPrefix(prefixedKey, RSA_DID_PREFIX)) {
         return {
