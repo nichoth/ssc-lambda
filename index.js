@@ -295,9 +295,9 @@ function isValidMsg (msg, prevMsg, publicKey) {
         .then(isVal => isVal && isPrevMsgOk(prevMsg, msg))
 }
 
-function verifyObj (publicKey, hmac_key, obj) {
-    if (!obj) (obj = hmac_key), (hmac_key = null);
-    obj = clone(obj);
+function verifyObj (publicKey, hmac_key, _obj) {
+    if (!_obj) (_obj = hmac_key), (hmac_key = null);
+    const obj = clone(_obj);
     const sig = obj.signature;
     delete obj.signature;
     return verify(publicKey, sig, stringify(obj))
