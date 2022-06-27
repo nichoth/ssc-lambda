@@ -160,7 +160,7 @@ async function signObj (keys, hmac_key, obj) {
         hmac_key = null
     }
     var _obj = clone(obj)
-    const msgStr = stringify(_obj, null, 2)
+    const msgStr = stringify(_obj)
     _obj.signature = await sign(keys, msgStr)
     return _obj
 }
@@ -365,7 +365,7 @@ function isPrevMsgOk (prevMsg, msg) {
 
 
 function getId (msg) {
-    return '%' + hash(stringify(msg, null, 2))
+    return '%' + hash(stringify(msg))
 }
 
 function hash (data, enc) {
