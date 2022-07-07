@@ -5,6 +5,8 @@ const stringify = require('json-stable-stringify')
 const sodium = require("chloride")
 var timestamp = require('monotonic-timestamp')
 
+console.log('webcrypto', webcrypto)
+
 const KeyType = {
     RSA: "rsa",
     Edwards: "ed25519",
